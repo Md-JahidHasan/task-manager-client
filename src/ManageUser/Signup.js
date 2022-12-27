@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../Contexts/AuthProvider/Authprovider';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+
 
 const Signup = () => {
-    const { createUser, updateUserProfile } = useContext(AuthContext);
+    const { createUser, updateUserProfile, user, providerLogin } = useContext(AuthContext);
 
 
     const {register, handleSubmit} = useForm();
@@ -37,12 +40,14 @@ const Signup = () => {
                         photoURL: imageURL
                     }
                     updateUserProfile(userInfo)
-                    .then(result=>{
+                    .then(()=>{
                         // Profile Updated
+                        toast.success("User created successfully!");
+                        // console.log(user);
                     }).catch(err=>{
                         console.error(err);
                     })
-                    console.log(userInfo);
+                
                 }).catch(err=>{
                     console.error(err);
                 })
@@ -52,6 +57,16 @@ const Signup = () => {
         })
 
         // console.log(image, url);
+    }
+
+    const handleProviderLogIn = ()=>{
+        providerLogin()
+            .then((result) => {
+                const user = result.user;
+                // console.log(user);
+            }).catch(err => {
+                console.error(err);
+            })
     }
 
     return (
@@ -69,7 +84,7 @@ const Signup = () => {
                             <label className="label">
                                 <span className="label-text">Choose Your Photo</span>
                             </label>
-                            <input {...register('image')} type="file" placeholder="" className="input input-bordered pt-2" />
+                            <input {...register('image')} type="file" placeholder="" className="input w-full input-bordered pt-2" />
                         </div>
                         <div className="form-control">
                             <label className="label">
@@ -90,10 +105,11 @@ const Signup = () => {
                             <button type='submit' className="btn btn-primary">Register</button>
                         </div>
                    </form>
-                    <h2 className='text-sm'>Already Have an account? Please <span className='text-blue-600 font-bold'>Login</span></h2>
+                    <h2 className='text-sm'>Already Have an account? Please <Link to='/login' className='text-blue-600 font-bold'>Login</Link></h2>
                     <hr />
+                    <h2>OR</h2>
                     <div className="form-control mt-4">
-                        <button className="btn btn-primary">Continue With Google</button>
+                        <button onClick={handleProviderLogIn} className="btn btn-primary">Continue With Google</button>
                     </div>
                 </div>
                 

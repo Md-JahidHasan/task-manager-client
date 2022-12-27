@@ -1,7 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../Contexts/AuthProvider/Authprovider';
+import {useContext} from 'react';
 
 const NavBar = () => {
+    const { user, logOut } = useContext(AuthContext)
+    // console.log(user);
+
+    const handleLogOut = () =>{
+        logOut()
+        .then(()=>{})
+        .catch(()=>{})
+    }
     return (
         <div className="navbar medium_bg text-white">
             <div className="navbar-start">
@@ -14,6 +24,10 @@ const NavBar = () => {
                         <li><Link to='/addTask'>Add Task</Link></li>
                         <li><Link to='/myTask'>My Task</Link></li>
                         <li><Link to='/completedTask'>Completed Task</Link></li>
+                        {
+                            user && <li><button onClick={handleLogOut} className='sm:hidden'>Logout</button></li>
+                        }
+                        
                         
                     </ul>
                 </div>
@@ -25,14 +39,21 @@ const NavBar = () => {
                     <li><Link to='/addTask'>Add Task</Link></li>
                     <li><Link to='/myTask'>My Task</Link></li>
                     <li><Link to='/completedTask'>Completed Task</Link></li>
+                    
                 </ul>
             </div>
             <div className="navbar-end">
-                <div className="avatar ">
-                    <div className="w-16 mask mask-squircle">
-                        <img src="https://placeimg.com/192/192/people" alt=''/>
-                    </div>
-                </div>
+                {
+                    user ? <div className='flex items-center text-center '>
+                        <button onClick={handleLogOut} className='btn btn-xs btn-outline text-sm mx-4 my-1 hidden sm:block'>Logout</button>
+                        <div className="avatar ">
+                            <div className="w-16 mask mask-squircle">
+                                <img className='w-16 h-16' src={user?.photoURL} alt='' />
+                            </div>
+                        </div>
+                    </div> : 
+                    <Link to='/login' className='btn btn-sm mr-4'>Login</Link>
+                }
             </div>
         </div>
     );

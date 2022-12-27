@@ -8,9 +8,9 @@ const Home = () => {
                 <div className='h-64'>
                     
                 </div>
-                <div className='h-28 light_bg rounded-t-full shadow-2xl'>
+                <div className='h-28 light_bg  rounded-t-full shadow-2xl'>
                     <Link to='/addTask' className="avatar relative bottom-14 animate-bounce hover:animate-none ">
-                        <div className="w-28 mask mask-hexagon medium_bg shadow-lg">
+                        <div className="w-28 mask mask-hexagon medium_bg hover:bg-purple-900 shadow-lg">
                             <h2 className='mt-11 font-bold text-white'>Add Task</h2>
                         </div>
                     </Link>
