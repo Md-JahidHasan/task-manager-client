@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
 import { useContext } from 'react';
 import {useForm} from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { AuthContext } from '../../Contexts/AuthProvider/Authprovider';
+import { default as api} from './../../store/apiSlice';
 
 const AddTask = () => {
 
     const { user, loading } = useContext(AuthContext);
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, resetField } = useForm();
     const [data, setData] = useState();
+
+    const [ addTask ] = api.useAddTaskMutation()
 
 
     const handleMyTaskSubmit = (data) =>{
@@ -41,7 +45,12 @@ const AddTask = () => {
                     submitDate : date,
                     isComplete: false,
                     comments:[]
-                }
+                };
+                addTask(taskInfo).unwrap();
+                toast.success('Your task is added..!')
+                resetField('taskTitle')
+                resetField('taskDetails')
+                resetField('taskImg')
 
                 
                 console.log(taskInfo);
