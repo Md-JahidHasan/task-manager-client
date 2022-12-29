@@ -1,12 +1,53 @@
 import React, {useState} from 'react';
+import { useContext } from 'react';
 import {useForm} from 'react-hook-form';
+import { AuthContext } from '../../Contexts/AuthProvider/Authprovider';
 
 const AddTask = () => {
+
+    const { user, loading } = useContext(AuthContext);
     const { register, handleSubmit } = useForm();
     const [data, setData] = useState();
 
+
     const handleMyTaskSubmit = (data) =>{
-        console.log(data);
+
+        const image = data.taskImg[0];
+        const formData = new FormData();
+        formData.append('image', image);
+        console.log(formData);
+        const url = `https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_imgbb_key}`;
+
+        fetch(url, {
+            method:'POST',
+            body: formData
+        }).then(res=>res.json())
+        .then(taskImgData=>{
+            if(taskImgData.success){
+
+                const taskName = data.taskTitle;
+                const taskDetail = data.taskDetails;
+                const taskImage = taskImgData.data.display_url;
+                const userName = user.displayName;
+                const userEmail=  user.email;
+                const date = new Date();
+
+                const taskInfo = {
+                    taskName,
+                    taskDetail,
+                    taskImage,
+                    userName,
+                    userEmail,
+                    submitDate : date,
+                    isComplete: false,
+                    comments:[]
+                }
+
+                
+                console.log(taskInfo);
+            }
+            
+        })
     }
     return (
         <div>
@@ -22,7 +63,7 @@ const AddTask = () => {
                                     <label className="label">
                                         <span className="label-text">New Task</span>
                                     </label>
-                                    <input {...register('taskName')} type="text" placeholder="Task Name" className="input input-bordered" />
+                                    <input {...register('taskTitle')} type="text" placeholder="Task Name" className="input input-bordered" />
                                 </div>
 
                                 <div className="form-control">
@@ -36,7 +77,7 @@ const AddTask = () => {
                                     <label className="label">
                                         <span className="label-text">Add Photo</span>
                                     </label>
-                                    <input {...register('taskImage')} type="file" className="file-input file-input-bordered  w-full " />
+                                    <input {...register('taskImg')} type="file" className="file-input file-input-bordered  w-full " />
                                 </div>
                                 <div className="form-control mt-6">
                                     <button type='submit' className="btn medium_bg">Submit</button>

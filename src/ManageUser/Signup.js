@@ -3,20 +3,26 @@ import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../Contexts/AuthProvider/Authprovider';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 
 const Signup = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const from = location.state?.from?.pathname || '/';
+
     const { createUser, updateUserProfile, user, providerLogin } = useContext(AuthContext);
 
 
     const {register, handleSubmit} = useForm();
     const [data, setData] = useState();
+
     const handleSignUp = (data) =>{
 
         const image = data.image[0];
         const formData = new FormData();
         formData.append('image', image);
+        // console.log(image, formData);
         const url = `https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_imgbb_key}`
 
         // Image hosting in IMGbb
@@ -43,6 +49,7 @@ const Signup = () => {
                     .then(()=>{
                         // Profile Updated
                         toast.success("User created successfully!");
+                        navigate(from, {replace:true})
                         // console.log(user);
                     }).catch(err=>{
                         console.error(err);
@@ -63,6 +70,7 @@ const Signup = () => {
         providerLogin()
             .then((result) => {
                 const user = result.user;
+                navigate(from, {replace:true});
                 // console.log(user);
             }).catch(err => {
                 console.error(err);
