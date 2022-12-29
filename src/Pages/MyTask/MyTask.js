@@ -8,27 +8,34 @@ const MyTask = () => {
 
     const [updateTaskComplete] = api.useUpdateTaskCompleteMutation()
 
+
     const handlerClick = (e) => {
         console.log(e.target.dataset.id);
         updateTaskComplete({ _id: e.target.dataset.id })
     }
 
-    // console.log(api.useGetTasksQuery(user?.email));
+    
+
     const { data, isFetching, isSuccess, isError} = api.useGetTasksQuery(user?.email);
+
+
+
     let Tasks;
+
     if(isFetching){
         Tasks = <Loading></Loading>
     }
+
     else if(isSuccess){
         if (data?.length === 0){
             Tasks = <div className='min-h-screen pt-28'>You have no any task. Please add your task..</div>
         }else if(data.length > 0){
         Tasks = data.map(v=><TaskCard info={v} key={v._id} handler={handlerClick} ></TaskCard>)}
     }
+    
     else if(isError){
         Tasks = <div className='text-3xl font-bold min-h-screen py-40'> Error...</div>
     }
-    // console.log(data?.length === 0);
 
     
 

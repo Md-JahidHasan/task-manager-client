@@ -36,6 +36,14 @@ export const apiSlice = createApi({
             })
         }),
 
+        updateTaskNotCompleted: builder.mutation({
+            query:(taskId)=>({
+                url:`/api/completedTasks`,
+                method:'PATCH',
+                body:taskId
+            }),
+        }),
+
 
         deleteTask: builder.mutation({
             query:(taskId)=>({

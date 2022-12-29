@@ -5,12 +5,26 @@ import {default as api} from '../../store/apiSlice'
 
 const CompletedTask = () => {
     const {user} = useContext(AuthContext);
+
+    const [updateTaskNotCompleted] = api.useUpdateTaskNotCompletedMutation();
+
+    const handlerClick = (e) =>{
+        updateTaskNotCompleted({ _id: e.target.dataset.id })
+        console.log(e.target.dataset.id);
+    }
+
+
     // console.log(api.useGetCompleteTasksQuery(user?.email));
     const { data, isFetching, isSuccess, isError } = api.useGetCompleteTasksQuery(user?.email);
+
+
+
     let CompletedTasks;
+
     if(isFetching){
         CompletedTasks = <Loading></Loading>
     }
+
     else if(isSuccess){
         if(data?.length === 0){
             CompletedTasks = <div className='mx-auto bg-blue-300 min-h-screen p-8'>
@@ -18,12 +32,19 @@ const CompletedTask = () => {
                 <h2 className='text-2xl font-bold p-10'>There is not any completed task yet. Please complete your task...</h2>
             </div>
         }else if(data?.length>0){
-            CompletedTasks = data.map(v => <TaskCard key={v?._id}></TaskCard>)
+            CompletedTasks = data.map(v => <TaskCard
+                key={v?._id}
+                info={v}
+                handler={handlerClick}
+            ></TaskCard>)
         }
     }
+
     else if(isError){
         CompletedTasks = <div className='text-3xl font-bold min-h-screen py-40'> Error...</div>
     }
+
+
     return (
         <div className='bg-purple-200 p-10'>
             <h1 className='text-2xl font-bold my-4 pb-4'>Completed Task</h1>
@@ -42,7 +63,7 @@ const TaskCard = ({ handler, info }) => {
                 <h2 className="card-title">New movie is released!</h2>
                 <p>Click the button to watch on Jetflix app.</p>
                 <div className="card-actions justify-end">
-                    <button onClick={handler}className="btn btn-primary">Not Completed</button>
+                    <button onClick={handler} data-id={info._id} className="btn btn-primary">Not Completed</button>
                 </div>
             </div>
 
