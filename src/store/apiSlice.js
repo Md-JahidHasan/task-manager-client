@@ -11,12 +11,14 @@ export const apiSlice = createApi({
 
         getTasks: builder.query({
             // Get:http://localhost:5000/api/tasks
-            query:(userEmail)=>`/api/tasks/${userEmail}`
+            query:(userEmail)=>`/api/tasks/${userEmail}`,
+            providesTags:['tasks']
         }),
 
 
         getCompleteTasks: builder.query({
-            query:(userEmail)=>`/api/completedTasks/${userEmail}`
+            query:(userEmail)=>`/api/completedTasks/${userEmail}`,
+            providesTags:['completedtasks']
         }),
 
 
@@ -25,16 +27,20 @@ export const apiSlice = createApi({
                 url:'/api/tasks',
                 method:'POST',
                 body:initialTask
-            })
+            }),
+            invalidatesTags:['tasks']
         }),
+
 
         updateTaskComplete: builder.mutation({
             query:(taskId)=>({
                 url:`/api/tasks`,
                 method:'PATCH',
                 body:taskId
-            })
+            }),
+            invalidatesTags:['tasks', 'completedtasks']
         }),
+
 
         updateTaskNotCompleted: builder.mutation({
             query:(taskId)=>({
@@ -42,6 +48,26 @@ export const apiSlice = createApi({
                 method:'PATCH',
                 body:taskId
             }),
+            invalidatesTags:['completedtasks', 'tasks']
+        }),
+
+
+        editAndUpdateTask: builder.mutation({
+            query:(newDataSet)=>({
+                url:`/api/editTask`,
+                method:'PATCH',
+                body:newDataSet
+            }),
+            invalidatesTags: ['completedtasks', 'tasks']
+        }),
+
+        postComment: builder.mutation({
+            query:(commentAndId)=>({
+                url:`/api/postComment`,
+                method:'PATCH',
+                body:commentAndId
+            }),
+            invalidatesTags: ['completedtasks', 'tasks']
         }),
 
 
@@ -51,6 +77,7 @@ export const apiSlice = createApi({
                 method:'DELETE',
                 body:taskId
             }),
+            invalidatesTags:['completedtasks', 'tasks']
         })
     })
 })

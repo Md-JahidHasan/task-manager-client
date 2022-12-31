@@ -36,7 +36,9 @@ const Login = () => {
     }
     return (
         <div className="hero min-h-screen bg-base-200 py-4">
+            
             <div className="card w-11/12 md:w-2/5  shadow-2xl bg-base-100">
+                <h1 className='text-3xl font-bold text-purple-600 mt-8'>Login</h1>
                     <div className="card-body">
                         <form onSubmit={handleSubmit(handleLogIn)} action="">
                         <div className="form-control">

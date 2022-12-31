@@ -23,11 +23,11 @@ export const router = createBrowserRouter([
             },
             {
                 path:'/myTask',
-                element:<MyTask></MyTask>
+                element: <PrivateRoute><MyTask></MyTask></PrivateRoute>
             },
             {
                 path: '/completedTask',
-                element:<CompletedTask></CompletedTask>
+                element: <PrivateRoute><CompletedTask></CompletedTask></PrivateRoute>
             },
             {
                 path:'/login',
